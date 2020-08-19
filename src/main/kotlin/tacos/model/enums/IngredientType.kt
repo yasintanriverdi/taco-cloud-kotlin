@@ -1,4 +1,4 @@
-package tacos
+package tacos.model.enums
 
 enum class IngredientType {
     WRAP,
