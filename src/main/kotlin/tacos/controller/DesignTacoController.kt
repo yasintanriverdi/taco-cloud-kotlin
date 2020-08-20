@@ -45,7 +45,7 @@ class DesignTacoController {
     @PostMapping
     fun processDesign(@ModelAttribute("design") design: Taco): String {
         // TODO - save the design
-        return "redirect:/"
+        return "redirect:/orders/current"
     }
 
 }
