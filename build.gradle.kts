@@ -21,6 +21,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	implementation("org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final")
+	implementation("javax.validation:validation-api:2.0.1.Final")
+	implementation("org.hibernate:hibernate-validator:6.1.5.Final")
+	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.3.RELEASE")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
