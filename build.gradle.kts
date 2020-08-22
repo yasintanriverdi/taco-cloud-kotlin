@@ -18,6 +18,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -26,6 +27,8 @@ dependencies {
 	implementation("javax.validation:validation-api:2.0.1.Final")
 	implementation("org.hibernate:hibernate-validator:6.1.5.Final")
 	implementation("org.springframework.boot:spring-boot-starter-validation:2.3.3.RELEASE")
+
+	implementation("com.h2database:h2")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

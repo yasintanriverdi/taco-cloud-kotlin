@@ -1,6 +1,7 @@
 package tacos.model
 
 import org.hibernate.validator.constraints.CreditCardNumber
+import java.util.Date
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Digits
 import javax.validation.constraints.NotBlank
@@ -8,19 +9,32 @@ import javax.validation.constraints.NotBlank
 // TODO clean-up empty strings
 data class Order(
         @field:NotBlank(message = "Name is required")
-        val name: String = "",
+        var deliveryName: String = "",
         @field:NotBlank(message = "Street is required")
-        val street: String = "",
+        var deliveryStreet: String = "",
         @field:NotBlank(message = "City is required")
-        val city: String = "",
+        var deliveryCity: String = "",
         @field:NotBlank(message = "State is required")
-        val state: String = "",
+        var deliveryState: String = "",
         @field:NotBlank(message = "Zip code is required")
-        val zip: String = "",
+        var deliveryZip: String = "",
         @field:CreditCardNumber(message = "Not a valid credit card number")
-        val ccNumber: String = "",
+        var ccNumber: String = "",
         @field:Pattern(regexp = "^(0[1-9]|1[0-2])([\\/])([1-9][0-9])$",
                 message = "Must be formatted MM/YY")
-        val ccExpiration: String = "",
+        var ccExpiration: String = "",
         @field:Digits(integer = 3, fraction = 0, message = "Invalid CVV")
-        val ccCVV: String = "")
+        var ccCVV: String = "") {
+
+    var id: Long = 0L
+
+    lateinit var placedAt: Date
+
+    val tacos by lazy {
+        mutableListOf<Taco>()
+    }
+
+    fun addDesign(taco: Taco) {
+        tacos.add(taco)
+    }
+}

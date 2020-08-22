@@ -1,34 +1,34 @@
 package tacos.controller
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import tacos.data.repository.IngredientRepository
+import tacos.data.repository.TacoRepository
 import tacos.model.Ingredient
+import tacos.model.Order
 import tacos.model.Taco
 import tacos.model.enums.IngredientType
 import javax.validation.Valid
 
 @Controller
 @RequestMapping("/design")
-class DesignTacoController {
+@SessionAttributes("order")
+class DesignTacoController @Autowired constructor(private val ingredientRepository: IngredientRepository,
+                                                  private val tacoRepository: TacoRepository) {
+
+    @ModelAttribute(name = "order")
+    fun order() = Order()
+
+    @ModelAttribute(name = "taco")
+    fun taco() = Taco()
 
     @GetMapping
     fun showDesignForm(model: Model): String {
-        val ingredients = listOf(
-                Ingredient("FLTO", "Flour Tortilla", IngredientType.WRAP),
-                Ingredient("COTO", "Corn Tortilla", IngredientType.WRAP),
-                Ingredient("GRBF", "Ground Beef", IngredientType.PROTEIN),
-                Ingredient("CARN", "Carnitas", IngredientType.PROTEIN),
-                Ingredient("TMTO", "Diced Tomatoes", IngredientType.VEGGIES),
-                Ingredient("LETC", "Lettuce", IngredientType.VEGGIES),
-                Ingredient("CHED", "Cheddar", IngredientType.CHEESE),
-                Ingredient("JACK", "Monterrey Jack", IngredientType.CHEESE),
-                Ingredient("SLSA", "Salsa", IngredientType.SAUCE),
-                Ingredient("SRCR", "Sour Cream", IngredientType.SAUCE))
+        val ingredients = mutableListOf<Ingredient>()
+        ingredients.addAll(ingredientRepository.findAll())
 
         IngredientType.values().forEach { type ->
             val ingredientsByType = ingredients.filter { ingredient ->
@@ -37,18 +37,20 @@ class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(), ingredientsByType)
         }
 
-        model.addAttribute("design", Taco())
-
         return "design"
     }
 
     @PostMapping
-    fun processDesign(@Valid @ModelAttribute("design") design: Taco, errors: Errors): String {
+    fun processDesign(@Valid design: Taco,
+                      errors: Errors,
+                      @ModelAttribute order: Order): String {
         if (errors.hasErrors()) {
             return "design"
         }
 
-        // TODO - save the design
+        val savedTaco = tacoRepository.save(design)
+        order.addDesign(savedTaco)
+
         return "redirect:/orders/current"
     }
 

@@ -1,30 +1,33 @@
 package tacos.controller
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.Errors
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.support.SessionStatus
+import tacos.data.repository.OrderRepository
 import tacos.model.Order
 import javax.validation.Valid
 
 @Controller
 @RequestMapping("/orders")
-class OrderController {
+@SessionAttributes("order")
+class OrderController @Autowired constructor(private val orderRepository: OrderRepository) {
 
     @GetMapping("/current")
-    fun orderForm(model: Model): String {
-        model.addAttribute("order", Order())
-        return "orderForm"
-    }
+    fun orderForm(model: Model) = "orderForm"
 
     @PostMapping
-    fun processOrder(@Valid order: Order, errors: Errors): String {
-        if(errors.hasErrors()) {
+    fun processOrder(@Valid  design: Order,
+                     errors: Errors,
+                     sessionStatus: SessionStatus): String {
+        if (errors.hasErrors()) {
             return "orderForm"
         }
 
+        orderRepository.save(design)
+        sessionStatus.setComplete()
         return "redirect:/"
     }
 
