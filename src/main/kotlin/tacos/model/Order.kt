@@ -1,12 +1,15 @@
 package tacos.model
 
 import org.hibernate.validator.constraints.CreditCardNumber
+import java.io.Serializable
 import java.util.Date
+import javax.persistence.*
 import javax.validation.constraints.Pattern
 import javax.validation.constraints.Digits
 import javax.validation.constraints.NotBlank
 
-// TODO clean-up empty strings
+//@Entity
+//@Table(name = "Taco_Order")
 data class Order(
         @field:NotBlank(message = "Name is required")
         var deliveryName: String = "",
@@ -24,17 +27,23 @@ data class Order(
                 message = "Must be formatted MM/YY")
         var ccExpiration: String = "",
         @field:Digits(integer = 3, fraction = 0, message = "Invalid CVV")
-        var ccCVV: String = "") {
+        var ccCVV: String = "") : Serializable {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0L
 
     lateinit var placedAt: Date
 
-    val tacos by lazy {
-        mutableListOf<Taco>()
-    }
+//    @ManyToMany(targetEntity = Taco::class)
+    val tacos : MutableList<Taco> = mutableListOf()
 
     fun addDesign(taco: Taco) {
         tacos.add(taco)
+    }
+
+    @PrePersist
+    fun placedAt() {
+        placedAt = Date()
     }
 }
