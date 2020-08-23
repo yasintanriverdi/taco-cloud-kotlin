@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -22,9 +23,30 @@ class SecurityConfig @Autowired constructor(
         return StandardPasswordEncoder("53cr3t")
     }
 
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        super.configure(auth)
+    override fun configure(http: HttpSecurity) {
+        http.authorizeRequests()
+                .antMatchers("/design", "/orders")
+                .hasRole("USER")
+                .antMatchers("/", "/**").permitAll()
 
+//                .antMatchers("/design", "/orders")
+//                .access("hasRole('ROLE_USER')")
+//                .antMatchers("/", "/**").access("permitAll")
+
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .defaultSuccessUrl("/design", true)
+//                .loginProcessingUrl("/authenticate")
+//                .usernameParameter("user")
+//                .passwordParameter("pwd")
+
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+    }
+
+    override fun configure(auth: AuthenticationManagerBuilder) {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(encoder())
 

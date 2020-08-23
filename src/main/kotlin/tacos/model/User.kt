@@ -10,17 +10,16 @@ import javax.persistence.Id
 
 @Entity
 data class User(private var userName: String = "",
-                private var userPassword: String = "") : UserDetails {
+                private var userPassword: String = "",
+                private var fullname: String = "",
+                private var street: String = "",
+                private var city: String = "",
+                private var state: String = "",
+                private var zip: String = "",
+                private var phoneNumber: String = "") : UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0L
-
-   private var fullname: String = ""
-   private var street: String = ""
-   private var city: String = ""
-   private var state: String = ""
-   private var zip: String = ""
-   private var phoneNumber: String = ""
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return mutableListOf<GrantedAuthority>(SimpleGrantedAuthority("ROLE_USER"))
@@ -39,7 +38,7 @@ data class User(private var userName: String = "",
     override fun getPassword(): String = userPassword
 
     companion object {
-        const val serialVersionUID : Long = 1L
+        const val serialVersionUID: Long = 1L
     }
 
 }
